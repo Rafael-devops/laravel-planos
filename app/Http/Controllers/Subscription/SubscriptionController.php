@@ -15,7 +15,11 @@ class SubscriptionController extends Controller
 
     public function index(){
 
-        return view('subscriptions.index');
+        if(auth()->user()->subscribed('defalut'))
+            return redirect()->route('subscriptions.premium');
+        return view('subscriptions.index', [
+            'intent' => auth()->user()->createSetupIntent(),
+        ]);
 
     }
 
@@ -30,6 +34,9 @@ class SubscriptionController extends Controller
     }
     
     public function premium(){
+
+        if(!auth()->user()->subscribed('defalut'))
+            return redirect()->route('subscriptions.checkout');
 
         return view('subscriptions.premium');
 
